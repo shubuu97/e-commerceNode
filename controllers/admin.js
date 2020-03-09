@@ -1,8 +1,14 @@
 const Product = require("../models/product");
 
 exports.addProduct = (req, res, next) => {
-  const { name, price, description } = req.body;
-  const product = new Product({ name, price, description, userId: req.user });
+  const { name, price, description, imageUrl } = req.body;
+  const product = new Product({
+    name,
+    price,
+    description,
+    imageUrl,
+    userId: req.user
+  });
   product
     .save()
     .then(response => {
