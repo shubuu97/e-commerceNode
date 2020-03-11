@@ -2,8 +2,11 @@ const path = require("path");
 
 const express = require("express");
 const bodyParser = require("body-parser");
+var cors = require("cors");
 
 const app = express();
+app.use(cors());
+
 const mongoose = require("mongoose");
 // const errorController = require("./controllers/error");
 
@@ -44,7 +47,7 @@ mongoose
         user.save();
       }
     });
-    app.listen(3000);
+    app.listen(3001);
   })
   .catch(error => {
     console.log(error);
