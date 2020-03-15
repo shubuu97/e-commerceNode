@@ -47,7 +47,7 @@ exports.signup = (req, res, next) => {
   User.findOne({ email: email })
     .then(user => {
       if (user) {
-        return res.redirect("/signup");
+        return res.send("Email Already Exist.");
       }
       bcrypt
         .hash(password, 12)
