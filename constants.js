@@ -4,4 +4,4 @@ const userTypes = {
 };
 
 exports.sendgridApiKey =
-  "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";
+  "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";
