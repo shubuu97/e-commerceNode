@@ -37,6 +37,8 @@ app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
 
+const port = parseInt(process.env.PORT, 10) || 3001;
+
 mongoose
   .connect("mongodb+srv://shubham:life@123@cluster0-zasjm.mongodb.net/shop?", {
     useNewUrlParser: true,
@@ -44,7 +46,7 @@ mongoose
   })
   .then(() => {
     console.log("connected");
-    app.listen(3001);
+    app.listen(port);
   })
   .catch(error => {
     console.log(error);
