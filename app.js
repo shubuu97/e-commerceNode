@@ -1,24 +1,30 @@
 const path = require("path");
 
 const express = require("express");
-const bodyParser = require("body-parser");
+const json = require("body-parser").json;
+const urlencoded = require("body-parser").urlencoded;
 var cors = require("cors");
 
 const app = express();
 app.use(cors());
 
 const mongoose = require("mongoose");
-// const errorController = require("./controllers/error");
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
+const authRoutes = require("./routes/auth");
 const User = require("./models/user");
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(json({ limit: "1gb", strict: true }));
+app.use(urlencoded({ limit: "1gb", extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
-  User.findById("5e628a66d6f0520658e4f651")
+  let { userid } = req.headers;
+  if (!userid) {
+    return next();
+  }
+  User.findById(userid)
     .then(user => {
       req.user = user;
       next();
@@ -27,9 +33,9 @@ app.use((req, res, next) => {
       console.log(error, "error");
     });
 });
-app.use(adminRoutes);
+app.use("/admin", adminRoutes);
 app.use(shopRoutes);
-// app.use(errorController.get404);
+app.use(authRoutes);
 
 mongoose
   .connect("mongodb+srv://shubham:life@123@cluster0-zasjm.mongodb.net/shop?", {
@@ -38,15 +44,6 @@ mongoose
   })
   .then(() => {
     console.log("connected");
-    User.findOne().then(user => {
-      if (!user) {
-        const user = User({
-          name: "Shubham",
-          email: "shubham@gmail.com"
-        });
-        user.save();
-      }
-    });
     app.listen(3001);
   })
   .catch(error => {

@@ -1,20 +1,21 @@
 const express = require("express");
 const adminController = require("../controllers/admin");
+const isAdminUser = require("../middleware/is-admin");
 const router = express.Router();
 
 //Add a product
-router.post("/add-product", adminController.addProduct);
+router.post("/add-product", isAdminUser, adminController.addProduct);
 
 // Get all products list
-router.get("/products", adminController.fetchAllProducts);
+router.get("/products", isAdminUser, adminController.fetchAllProducts);
 
 //get product by id
-router.get("/product", adminController.findProductById);
+router.get("/product", isAdminUser, adminController.findProductById);
 
 // Update a product
-router.put("/update-product", adminController.updateProduct);
+router.post("/update-product", isAdminUser, adminController.updateProduct);
 
 //Delete a product
-router.delete("/delete-product", adminController.deleteProduct);
+router.get("/delete-product", isAdminUser, adminController.deleteProduct);
 
 module.exports = router;

@@ -2,12 +2,13 @@ const Product = require("../models/product");
 
 exports.addProduct = (req, res, next) => {
   const { name, price, description, imageUrl } = req.body;
+  const { userid } = req.headers;
   const product = new Product({
     name,
     price,
     description,
     imageUrl,
-    userId: req.user
+    userId: userid
   });
   product
     .save()
@@ -37,7 +38,7 @@ exports.updateProduct = (req, res, next) => {
 };
 
 exports.deleteProduct = (req, res, next) => {
-  const { id } = req.body;
+  const { id } = req.query;
   Product.findByIdAndDelete(id)
     .then(result => {
       res.send(result);
@@ -48,12 +49,12 @@ exports.deleteProduct = (req, res, next) => {
 };
 
 exports.fetchAllProducts = (req, res, next) => {
-  Product.find()
+  const { userid } = req.headers;
+  Product.find({ userId: userid })
     //? to fetch only specific fields and populate is used to fetch all data instead of id only
     // .select("-_id")
     // .populate("userId", "name")
     .then(products => {
-      console.log(products, "products");
       res.json(products);
     })
     .catch(error => {
@@ -62,7 +63,7 @@ exports.fetchAllProducts = (req, res, next) => {
 };
 
 exports.findProductById = (req, res, next) => {
-  const { id } = req.body;
+  const { id } = req.query;
   Product.findById(id)
     .then(product => {
       res.json(product);
