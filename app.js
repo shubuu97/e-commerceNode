@@ -2,13 +2,34 @@ const path = require("path");
 
 const express = require("express");
 const json = require("body-parser").json;
+const mongoose = require("mongoose");
 const urlencoded = require("body-parser").urlencoded;
-var cors = require("cors");
+let cors = require("cors");
+let multer = require("multer");
+
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/jpeg"
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
 
 const app = express();
 app.use(cors());
-
-const mongoose = require("mongoose");
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
@@ -17,6 +38,9 @@ const User = require("./models/user");
 
 app.use(json({ limit: "1gb", strict: true }));
 app.use(urlencoded({ limit: "1gb", extended: true }));
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
+);
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
