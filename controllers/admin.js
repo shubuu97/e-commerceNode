@@ -1,22 +1,28 @@
 const Product = require("../models/product");
 
 exports.addProduct = (req, res, next) => {
-  const { name, price, description, imageUrl } = req.body;
+  const { name, price, description } = req.body;
+  const image = req.file;
   const { userid } = req.headers;
+  if (!image) {
+    return res
+      .status(400)
+      .send("Please enter valid image with format jpg/jpeg/png");
+  }
   const product = new Product({
     name,
     price,
     description,
-    imageUrl,
+    image: image.path,
     userId: userid
   });
   product
     .save()
     .then(response => {
-      res.send(response);
+      res.status(200).send(response);
     })
     .catch(err => {
-      res.send(err);
+      res.status(500).send(err);
     });
 };
 
