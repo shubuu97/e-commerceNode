@@ -55,7 +55,16 @@ exports.removeItemFromCart = (req, res, next) => {
     });
 };
 exports.fetchCartItems = (req, res, next) => {
-  res.json(req.user.cart);
+  req.user
+    .populate("cart.items.productId")
+    .execPopulate()
+    .then(user => {
+      const products = user.cart.items;
+      res.json(products);
+    })
+    .catch(err => {
+      res.json(err);
+    });
 };
 
 exports.createOrder = (req, res, next) => {
