@@ -1,7 +1,7 @@
 const Product = require("../models/product");
 
 exports.addProduct = (req, res, next) => {
-   const { name, price, description } = req.body;
+   const { name, price, image, description } = req.body;
    // const image = req.file;
    const { userid } = req.headers;
    // if (!image) {
@@ -13,7 +13,7 @@ exports.addProduct = (req, res, next) => {
       name,
       price,
       description,
-      // image: image.path,
+      image,
       userId: userid,
    });
    product
@@ -27,19 +27,20 @@ exports.addProduct = (req, res, next) => {
 };
 
 exports.updateProduct = (req, res, next) => {
-   const { id, name, price, description } = req.body;
+   const { id, name, price, image, description } = req.body;
    Product.findById(id)
       .then((product) => {
          product.name = name;
          product.price = price;
          product.description = description;
+         product.image = image;
          return product.save();
       })
       .then((response) => {
          res.send(response);
       })
       .catch((error) => {
-         res.send(error);
+         res.statu(500).send(error);
       });
 };
 
