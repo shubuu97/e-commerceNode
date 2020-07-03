@@ -52,7 +52,8 @@ exports.signup = (req, res, next) => {
    const isValidEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(
       email
    );
-   if (!name || !isValidEmail || password || userType !== 1 || userType !== 2) {
+   console.log(isValidEmail, "isValidEmail");
+   if (!name || !isValidEmail || !password) {
       return res.status(400).json({ message: "Invalid request!" });
    }
    User.findOne({ email })
