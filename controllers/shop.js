@@ -104,7 +104,7 @@ exports.createOrder = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
-   Order.findOne({ "user.userId": req.user._id })
+   Order.find({ "user.userId": req.user._id })
       .then((orders) => {
          res.send(orders);
       })
